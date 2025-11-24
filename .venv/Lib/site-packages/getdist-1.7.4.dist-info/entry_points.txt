@@ -1,0 +1,4 @@
+[console_scripts]
+getdist = getdist.command_line:getdist_command
+getdist-gui = getdist.command_line:getdist_gui
+getdist-streamlit = getdist.command_line:getdist_streamlit

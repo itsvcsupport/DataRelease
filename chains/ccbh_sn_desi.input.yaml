@@ -1,0 +1,94 @@
+theory:
+  CCBH:
+    external: !!python/name:ccbh_theory.CCBHCosmology ''
+likelihood:
+  sn.pantheonplus: null
+  bao.desi_2024_bao_all: null
+params:
+  H0:
+    prior:
+      min: 40.0
+      max: 90.0
+    ref:
+      dist: norm
+      loc: 70.0
+      scale: 5.0
+    proposal: 1.0
+  ombh2:
+    prior:
+      min: 0.01
+      max: 0.04
+    ref:
+      dist: norm
+      loc: 0.0224
+      scale: 0.0005
+    proposal: 0.0003
+  omch2:
+    prior:
+      min: 0.05
+      max: 0.3
+    ref:
+      dist: norm
+      loc: 0.12
+      scale: 0.005
+    proposal: 0.001
+  k1:
+    prior:
+      min: -3.0
+      max: 6.0
+    ref:
+      dist: norm
+      loc: 0.0
+      scale: 1.0
+    proposal: 0.1
+  k2:
+    prior:
+      min: -3.0
+      max: 6.0
+    ref:
+      dist: norm
+      loc: 3.0
+      scale: 1.0
+    proposal: 0.1
+  k3:
+    prior:
+      min: -3.0
+      max: 6.0
+    ref:
+      dist: norm
+      loc: 3.0
+      scale: 1.0
+    proposal: 0.1
+  z_t1:
+    prior:
+      min: 1.0
+      max: 10.0
+    ref:
+      dist: norm
+      loc: 4.0
+      scale: 1.0
+    proposal: 0.1
+  z_t2:
+    prior:
+      min: 0.1
+      max: 4.0
+    ref:
+      dist: norm
+      loc: 1.0
+      scale: 0.5
+    proposal: 0.1
+  T_cmb:
+    value: 2.7255
+  N_eff:
+    value: 3.046
+  Omega_m:
+    derived: true
+  Omega_bh0:
+    derived: true
+sampler:
+  mcmc:
+    max_tries: 10
+    Rminus1_stop: 0.03
+    Rminus1_cl_stop: 0.2
+    covmat: auto
+output: ccbh_sn_desi

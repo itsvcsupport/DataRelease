@@ -1,0 +1,81 @@
+# run_ccbh_sn_desi.yaml
+
+# Tell Cobaya where to find our custom theory
+modules:
+  - .
+
+theory:
+  ccbh_theory.CCBHCosmology: {}
+
+likelihood:
+  sn.pantheonplus: null
+  bao.desi_2024_bao_all: null
+
+params:
+  # --- CCBHTheory primary parameters (see ccbh_theory.py for priors) ---
+  H0:
+    prior: {min: 40, max: 90}
+    ref: {dist: norm, loc: 70, scale: 5}
+    proposal: 1.0
+  ombh2:
+    prior: {min: 0.01, max: 0.04}
+    ref: {dist: norm, loc: 0.0224, scale: 0.0005}
+    proposal: 0.0003
+  omch2:
+    prior: {min: 0.05, max: 0.3}
+    ref: {dist: norm, loc: 0.12, scale: 0.005}
+    proposal: 0.001
+  k1:
+    prior: {min: -3.0, max: 6.0}
+    ref: {dist: norm, loc: 0.0, scale: 1.0}
+    proposal: 0.1
+  k2:
+    prior: {min: -3.0, max: 6.0}
+    ref: {dist: norm, loc: 3.0, scale: 1.0}
+    proposal: 0.1
+  k3:
+    prior: {min: -3.0, max: 6.0}
+    ref: {dist: norm, loc: 3.0, scale: 1.0}
+    proposal: 0.1
+  z_t1:
+    prior: {min: 1.0, max: 10.0}
+    ref: {dist: norm, loc: 4.0, scale: 1.0}
+    proposal: 0.1
+  z_t2:
+    prior: {min: 0.1, max: 4.0}
+    ref: {dist: norm, loc: 1.0, scale: 0.5}
+    proposal: 0.1
+
+  # Fixed (but overridable) “background” microphysics params:
+  T_cmb:
+    value: 2.7255
+  N_eff:
+    value: 3.046
+
+  # Expose useful derived parameters:
+  Omega_m:
+    derived: true
+  Omega_bh0:
+    derived: true
+  rs_drag:
+    derived: true
+
+  # Convenience derived χ² combinations (use existing chi2_<like> names)
+  chi2__SN:
+    derived: "lambda chi2_sn_pantheonplus: chi2_sn_pantheonplus"
+    latex: "\\chi^2_\\mathrm{SN}"
+  chi2__DESI:
+    derived: "lambda chi2_bao_desi_2024_bao_all: chi2_bao_desi_2024_bao_all"
+    latex: "\\chi^2_\\mathrm{DESI}"
+
+sampler:
+  mcmc:
+    max_tries: 10
+    Rminus1_stop: 0.03      # loose-ish for fast iteration
+    Rminus1_cl_stop: 0.2
+    drag: true
+    oversample_power: 0.4
+    proposal_scale: 1.9
+    covmat: auto
+
+output: chains/ccbh_sn_desi
