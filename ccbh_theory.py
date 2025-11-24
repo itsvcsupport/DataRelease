@@ -303,10 +303,10 @@ class CCBHCosmology(Theory):
             rs_drag = self._rs_drag(H0, Omega_m, Omega_r, Omega_b, a_d)
 
             state["derived"] = {
-    "Omega_m": Omega_m,
-    "Omega_bh0": Omega_bh0,
-    "rdrag": rs_drag,
-}
+                "Omega_m": Omega_m,
+                "Omega_bh0": Omega_bh0,
+                "rdrag": rs_drag,
+            }
 
     # ------------------------------------------------------------------
     # get_* methods for SN and BAO likelihoods
@@ -338,3 +338,71 @@ class CCBHCosmology(Theory):
         chi = self._chi_of_z(z)
         dA = chi / (1.0 + z)
         return dA
+
+
+# ----------------------------------------------------------------------
+# Convenience helpers for use outside Cobaya
+# ----------------------------------------------------------------------
+def make_ccbh_background(H0, ombh2, omch2,
+                         k1, k2, k3, z_t1, z_t2,
+                         T_cmb=2.7255, N_eff=3.046):
+    """
+    Build a CCBHCosmology instance and precompute background tables
+    for the given parameter set, so we can query H(z), chi(z), etc.
+    """
+    cosmo = CCBHCosmology()
+    cosmo.initialize()
+    state = {}
+
+    cosmo.calculate(
+        state,
+        want_derived=True,
+        H0=H0,
+        ombh2=ombh2,
+        omch2=omch2,
+        T_cmb=T_cmb,
+        N_eff=N_eff,
+        k1=k1,
+        k2=k2,
+        k3=k3,
+        z_t1=z_t1,
+        z_t2=z_t2,
+    )
+    return cosmo, state
+
+
+def H_of_z(z, H0, ombh2, omch2,
+           k1, k2, k3, z_t1, z_t2,
+           T_cmb=2.7255, N_eff=3.046):
+    """
+    Convenience wrapper: return H(z) [km/s/Mpc] for the CCBH model.
+    """
+    cosmo, _ = make_ccbh_background(
+        H0, ombh2, omch2, k1, k2, k3, z_t1, z_t2, T_cmb, N_eff
+    )
+    return cosmo.get_Hubble(z, units="km/s/Mpc")
+
+
+def E_of_z(z, H0, ombh2, omch2,
+           k1, k2, k3, z_t1, z_t2,
+           T_cmb=2.7255, N_eff=3.046):
+    """
+    Return dimensionless expansion rate E(z) = H(z)/H0.
+    """
+    Hz = H_of_z(z, H0, ombh2, omch2,
+                k1, k2, k3, z_t1, z_t2,
+                T_cmb=T_cmb, N_eff=N_eff)
+    return np.asarray(Hz) / H0
+
+
+def omega_ccbh0(H0, ombh2, omch2,
+                k1, k2, k3, z_t1, z_t2,
+                T_cmb=2.7255, N_eff=3.046):
+    """
+    Return Omega_BH,0 (present-day CCBH density fraction).
+    This just reads the 'Omega_bh0' derived quantity you already compute.
+    """
+    _, state = make_ccbh_background(
+        H0, ombh2, omch2, k1, k2, k3, z_t1, z_t2, T_cmb, N_eff
+    )
+    return state["derived"]["Omega_bh0"]

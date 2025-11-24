@@ -1,0 +1,74 @@
+theory:
+  camb:
+    extra_args:
+      dark_energy_model: ppf
+likelihood:
+  planck_2018_highl_plik.TTTEEE: null
+  planck_2018_lowl.TT: null
+  planck_2018_lowl.EE: null
+  planck_2018_lensing.clik: null
+params:
+  H0:
+    prior:
+      min: 50
+      max: 90
+    ref: 70
+  ombh2:
+    prior:
+      min: 0.01
+      max: 0.04
+    ref: 0.0224
+  omch2:
+    prior:
+      min: 0.05
+      max: 0.3
+    ref: 0.12
+  ns:
+    prior:
+      min: 0.8
+      max: 1.2
+    ref: 0.965
+  As:
+    prior:
+      min: 1e-10
+      max: 3e-9
+    ref: 2.1e-09
+  tau:
+    prior:
+      min: 0.01
+      max: 0.1
+    ref: 0.054
+  k1:
+    prior:
+      min: -3.0
+      max: 6.0
+    ref: 0.0
+  k2:
+    prior:
+      min: -3.0
+      max: 6.0
+    ref: 3.0
+  k3:
+    prior:
+      min: -3.0
+      max: 6.0
+    ref: 3.0
+  z_t1:
+    prior:
+      min: 1.0
+      max: 10.0
+    ref: 4.0
+  z_t2:
+    prior:
+      min: 0.1
+      max: 4.0
+    ref: 1.0
+  Omega_ccbh0:
+    derived: true
+  sigma8:
+    derived: true
+sampler:
+  mcmc:
+    Rminus1_stop: 0.03
+    Rminus1_cl_stop: 0.02
+output: planck_camb_test
